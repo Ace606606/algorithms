@@ -1,4 +1,6 @@
+var
 build
+.vscode
 # Prerequisites
 *.d
 
