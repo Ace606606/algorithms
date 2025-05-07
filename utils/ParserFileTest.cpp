@@ -1,10 +1,31 @@
-#include "parser_file.hpp"
+// ParserFileTest.cpp
+#include "ParserFileTest.hpp"
 
+#include <exception>
 #include <filesystem>
 #include <string>
 
+#include "logger.hpp"
+
 Parser_file::Parser_file(const std::string& path_to_file)
-    : path_to_file_(path_to_file) {}
+    : path_to_file_(path_to_file) {
+    static bool logger_initialized = []() {
+        if (!Logger::GetLogger()) {
+            Logger::Init();
+            Logger::Debug("Default logger initialized");
+            return true;
+        }
+        return false;
+    }();
+
+    if (!std::filesystem::exists(path_to_file_) ||
+        std::filesystem::is_regular_file(path_to_file_)) {
+        Logger::Error("File not found or file not regular file: " +
+                      path_to_file_);
+        throw std::runtime_error("File not found or file not regular file");
+    }
+}
+
 Parser_file::~Parser_file() {
     if (checkerOpenFile()) file_.close();
 }

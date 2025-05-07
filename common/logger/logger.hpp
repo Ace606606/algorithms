@@ -9,7 +9,7 @@ enum class LoggerOutput { ConsoleOnly, FileOnly, ConsoleAndFile };
 class Logger {
    public:
     static void Init(
-        LoggerOutput output_type = LoggerOutput::ConsoleAndFile,
+        LoggerOutput output_type = LoggerOutput::ConsoleOnly,
         const std::string& filename = "logs/app.logs",
         spdlog::level::level_enum level = spdlog::level::debug,
         const std::string& pattern = "[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");

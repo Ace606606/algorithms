@@ -9,11 +9,13 @@ option(BUILD_SORTING "Build Sorting Algorithms" OFF)
 option(ENABLE_TESTS "Build tests" OFF)
 
 # utils build always
-add_library(utils utils/parser_file.cpp utils/parser_file.hpp)
+add_library(utils utils/ParserFileTest.cpp utils/ParserFileTest.hpp utils/ParserEnv.cpp utils/ParserEnv.hpp)
 target_include_directories(utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/utils)
 
 # logs
 add_subdirectory(common/logger)
+
+target_link_libraries(utils PRIVATE logger)
 
 # connection components by options [-DBUILD_BST=ON]
 if(BUILD_BST)
