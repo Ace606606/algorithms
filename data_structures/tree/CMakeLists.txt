@@ -1,5 +1,5 @@
 # lib BST
-add_library(bst src/bst.cpp)
+add_library(bst include/bst.hpp)
 # includes
 target_include_directories(bst PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 # links

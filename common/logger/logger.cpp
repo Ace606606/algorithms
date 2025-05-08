@@ -73,4 +73,5 @@ void Logger::SetLevel(spdlog::level::level_enum level) {
 void Logger::SetPattern(const std::string& pattern) {
     if (logger_) logger_->set_pattern(pattern);
 }
+
 std::shared_ptr<spdlog::logger> Logger::GetLogger() { return logger_; }
