@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <string>
 
+#include "log_macros.hpp"
 #include "logger.hpp"
 
 Parser_file::Parser_file(const std::string& path_to_file)
@@ -12,7 +13,7 @@ Parser_file::Parser_file(const std::string& path_to_file)
     static bool logger_initialized = []() {
         if (!Logger::GetLogger()) {
             Logger::Init();
-            Logger::Debug("Default logger initialized");
+            LOG_DEBUG("Default logger initialized");
             return true;
         }
         return false;
@@ -20,8 +21,7 @@ Parser_file::Parser_file(const std::string& path_to_file)
 
     if (!std::filesystem::exists(path_to_file_) ||
         std::filesystem::is_regular_file(path_to_file_)) {
-        Logger::Error("File not found or file not regular file: " +
-                      path_to_file_);
+        LOG_ERROR("File not found or file not regular file: " + path_to_file_);
         throw std::runtime_error("File not found or file not regular file");
     }
 }

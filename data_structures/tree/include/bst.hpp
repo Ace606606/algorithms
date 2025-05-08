@@ -4,6 +4,7 @@
 #include <memory>
 #include <stack>
 
+#include "log_macros.hpp"
 #include "logger.hpp"
 
 template <typename T>
@@ -15,11 +16,11 @@ class BinarySearchTree {
         std::unique_ptr<Node> right;
 
         Node(T value) : data(value) {
-            Logger::Debug("Node created with value: " + std::to_string(data));
+            LOG_DEBUG("Node created with value: " + std::to_string(data));
         }
 
         ~Node() {
-            Logger::Debug("Node destoyed with value: " + std::to_string(data));
+            LOG_DEBUG("Node destoyed with value: " + std::to_string(data));
         }
     };
 
@@ -27,12 +28,12 @@ class BinarySearchTree {
     std::stack<Node*> stack;
 
    public:
-    BinarySearchTree() { Logger::Debug("BST created."); };
+    BinarySearchTree() { LOG_DEBUG("BST created."); };
 
-    ~BinarySearchTree() { Logger::Debug("BST destroyed."); }
+    ~BinarySearchTree() { LOG_DEBUG("BST destroyed."); }
 
     void insert(T value) {
-        Logger::Debug("Inserting value: " + std::to_string(value));
+        LOG_DEBUG("Inserting value: " + std::to_string(value));
         insertImpl(root_, value);
     }
 
@@ -42,10 +43,10 @@ class BinarySearchTree {
 
 template <typename T>
 void BinarySearchTree<T>::insertImpl(std::unique_ptr<Node>& node, T value) {
-    Logger::Debug("Start insertImpl for value: " + std::to_string(value));
+    LOG_DEBUG("Start insertImpl for value: " + std::to_string(value));
     if (!node) {
-        Logger::Debug("Tree is empty. Creating root node with value: " +
-                      std::to_string(value));
+        LOG_DEBUG("Tree is empty. Creating root node with value: " +
+                  std::to_string(value));
         node = std::make_unique<Node>(value);
         return;
     }
@@ -56,40 +57,40 @@ void BinarySearchTree<T>::insertImpl(std::unique_ptr<Node>& node, T value) {
         std::string current_val = std::to_string(current->data);
 
         if (value < current->data) {
-            Logger::Debug("Value " + std::to_string(value) +
-                          " < current node " + current_val);
+            LOG_DEBUG("Value " + std::to_string(value) + " < current node " +
+                      current_val);
 
             if (!current->left) {
-                Logger::Debug("Left child of node " + current_val +
-                              " is empty. Inserting there.");
+                LOG_DEBUG("Left child of node " + current_val +
+                          " is empty. Inserting there.");
 
                 current->left = std::make_unique<Node>(value);
-                Logger::Debug("Inserted " + std::to_string(value) +
-                              " as left child of " + current_val);
+                LOG_DEBUG("Inserted " + std::to_string(value) +
+                          " as left child of " + current_val);
                 break;
             } else {
-                Logger::Debug("Node " + current_val +
-                              " has left child. Moving left.");
+                LOG_DEBUG("Node " + current_val +
+                          " has left child. Moving left.");
                 current = current->left.get();
             }
         } else if (value > current->data) {
-            Logger::Debug("Value " + std::to_string(value) +
-                          " > current node " + current_val);
+            LOG_DEBUG("Value " + std::to_string(value) + " > current node " +
+                      current_val);
             if (!current->right) {
-                Logger::Debug("Right child of node " + current_val +
-                              " is empty. Inserting there.");
+                LOG_DEBUG("Right child of node " + current_val +
+                          " is empty. Inserting there.");
                 current->right = std::make_unique<Node>(value);
-                Logger::Debug("Inserted " + std::to_string(value) +
-                              " as right child of " + current_val);
+                LOG_DEBUG("Inserted " + std::to_string(value) +
+                          " as right child of " + current_val);
                 break;
             } else {
-                Logger::Debug("Node " + current_val +
-                              " has left child. Moving right.");
+                LOG_DEBUG("Node " + current_val +
+                          " has left child. Moving right.");
                 current = current->right.get();
             }
         } else {
-            Logger::Debug("Value " + std::to_string(value) +
-                          " already exists in tree. Insertion skipped.");
+            LOG_DEBUG("Value " + std::to_string(value) +
+                      " already exists in tree. Insertion skipped.");
             break;
         }
     }

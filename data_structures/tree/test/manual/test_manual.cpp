@@ -8,6 +8,7 @@
 #include "ParserEnv.hpp"
 #include "ParserFileTest.hpp"
 #include "bst.hpp"
+#include "log_macros.hpp"
 #include "logger.hpp"
 
 struct LoggerConfig {
@@ -20,19 +21,20 @@ struct LoggerConfig {
 void parser_env(std::string& path_project_root,
                 std::string& path_test_data_bst) {
     std::string env_path = std::filesystem::current_path() / ".env";
-    Logger::Debug("Path to .env: " + env_path);
+    LOG_DEBUG("Path to .env: " + env_path);
 
-    ParserEnv parser_env(env_path);
+    ParserEnv parser(env_path);
 
-    Logger::Debug("Status read_env_file: " +
-                  parser_env.to_string_status(parser_env.read_env_file()));
+    ParserStatus parser_status = parser.read_env_file();
+    LOG_INFO("Status read_env_file(.env): " +
+             parser.to_string_status(parser_status));
     std::vector<std::pair<std::string, std::string>> env_vars =
-        parser_env.get_env_vars();
+        parser.get_env_vars();
 
-    Logger::Debug("Current env_vars:");
+    LOG_DEBUG("Current env_vars:");
 
     for (const auto& obj : env_vars) {
-        Logger::Debug(obj.first + "=" + obj.second);
+        LOG_DEBUG(obj.first + "=" + obj.second);
         if (!obj.first.compare("PROJECT_ROOT")) path_project_root = obj.second;
         if (!obj.first.compare("TEST_DATA_BST"))
             path_test_data_bst = obj.second;
@@ -72,7 +74,7 @@ int main(int argc, char* argv[]) {
     LoggerConfig config = parse_args(argc, argv);
     Logger::Init(config.output, config.path, config.level, config.pattern);
 
-    Logger::Info("Tests manual run");
+    LOG_INFO("Tests manual run");
 
     std::string path_project_root;
     std::string path_test_data_bst;
@@ -80,11 +82,11 @@ int main(int argc, char* argv[]) {
     parser_env(path_project_root, path_test_data_bst);
 
     if (path_test_data_bst.empty()) {
-        Logger::Error("Var TEST_DATA_BST not found");
+        LOG_ERROR("Var TEST_DATA_BST not found");
         return 1;
     }
 
-    Logger::Debug("################RUN_TEST################");
+    LOG_INFO("################RUN_TEST################");
     BinarySearchTree<int> bst;
 
     bst.insert(1);

@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include "log_macros.hpp"
 #include "logger.hpp"
 
 static inline void trim(std::string& s) {
@@ -38,7 +39,7 @@ ParserEnv::ParserEnv(const std::string& path_to_env)
     static bool logger_initialized = []() {
         if (!Logger::GetLogger()) {
             Logger::Init();
-            Logger::Debug("Default logger initialized");
+            LOG_DEBUG("Default logger initialized");
             return true;
         }
         return false;
@@ -50,19 +51,19 @@ ParserStatus ParserEnv::read_env_file(char token) {
     std::ifstream file(path_to_env_);
 
     if (!file.is_open()) {
-        Logger::Error("File opening error: " + path_to_env_);
+        LOG_ERROR("File opening error: " + path_to_env_);
         return ParserStatus::FILE_OPEN_ERROR;
     }
 
-    Logger::Debug("Parsing .env file: " + path_to_env_);
+    LOG_DEBUG("Parsing .env file: " + path_to_env_);
     std::string line, key, value;
 
     for (int idx{}; std::getline(file, line); ++idx) {
         trim(line);
 
         if (line.empty() || line[0] == '#' || line[0] == ';') {
-            Logger::Debug("Skipping line empty/comment: #" +
-                          std::to_string(idx + 1));
+            LOG_DEBUG("Skipping line empty/comment: #" +
+                      std::to_string(idx + 1));
             continue;
         }
 
@@ -73,7 +74,7 @@ ParserStatus ParserEnv::read_env_file(char token) {
         trim(value);
 
         if (key.empty()) {
-            Logger::Error("Empty key at line: " + std::to_string(idx + 1));
+            LOG_ERROR("Empty key at line: " + std::to_string(idx + 1));
             return ParserStatus::INVALID_KEY;
         }
 
@@ -82,11 +83,11 @@ ParserStatus ParserEnv::read_env_file(char token) {
             [&key](const auto& item) { return item.first == key; });
 
         if (it != env_vars_.end()) {
-            Logger::Warn("Dublicate key [" + key + "] found overwriting...");
+            LOG_WARN("Dublicate key [" + key + "] found overwriting...");
             *it = {key, value};
         } else {
             env_vars_.push_back({key, value});
-            Logger::Debug("Added env var: " + key + "=" + value);
+            LOG_DEBUG("Added env var: " + key + "=" + value);
         }
     }
 
